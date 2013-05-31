@@ -2,23 +2,20 @@ Meteor.Router.add(
   '/': 'hello'
   '/tutorial/:owner/:repo/:sha': (owner, repo, sha) ->
     base = ""
+    console.log sha
     $.ajax
       url: "https://api.github.com/repos/#{owner}/#{repo}/commits"
       success: (commits) ->
-        # AMK HERE set up dependencies
-        parent_to_child = {}
-        child_to_parent = {}
-        for commit in commits
-          parent_to_child[commit.parents[0].sha] = commit.sha
-          child_to_parent[commit.sha] = commit.parents[0].sha
+        for commit, index in commits
+          if commit.sha == sha
+            Session.set('next', commits[index-1].sha)
+            Session.set('previous', commits[index+1].sha)
 
-        Session.set('next', parent_to_child[commit.sha])
-        Session.set('previous', child_to_parent[commit.sha])
-        base = child_to_parent[commit.sha]
         $.ajax
-          url: "https://api.github.com/repos/#{owner}/#{repo}/compare/#{base}...#{sha}",
+          url: "https://api.github.com/repos/#{owner}/#{repo}/commits/#{sha}",
           success: (result) ->
             diff = ({filename: file.filename, patch: file.patch} for file in result.files)
             Session.set('diff', diff)
+    return 'tutorial'
   '*': '404'
 )
