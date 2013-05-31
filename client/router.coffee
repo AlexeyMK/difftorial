@@ -1,5 +1,5 @@
 Meteor.Router.add(
-  '': -> 'index'
+  '': 'index'
   '/dummy': ->
     Session.set('next', '#')
     Session.set('previous', '#')
