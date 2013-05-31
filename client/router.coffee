@@ -3,12 +3,12 @@ Meteor.Router.add(
     base = ""
     console.log sha
     $.ajax
-      url: "https://api.github.com/repos/#{owner}/#{repo}/commits"
+      url: "https://api.github.com/repos/#{owner}/#{repo}/commits?per_page=100"
       success: (commits) ->
         for commit, index in commits
           if commit.sha == sha
-            Session.set('next', commits[index-1].sha)
-            Session.set('previous', commits[index+1].sha)
+            Session.set('next', commits[index-1]?.sha)
+            Session.set('previous', commits[index+1]?.sha)
 
         $.ajax
           url: "https://api.github.com/repos/#{owner}/#{repo}/commits/#{sha}",
