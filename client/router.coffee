@@ -4,7 +4,7 @@ Meteor.Router.add(
     $.ajax
       url: "https://api.github.com/repos/#{owner}/#{repo}/compare/#{base}...#{head}",
       success: (result) ->
-        diff = [file.filename, file.patch] for file in result.files
+        diff = ({filename: file.filename, patch: file.patch} for file in result.files)
         Session.set('diff', diff)
     'tutorial'
   '*': '404'
