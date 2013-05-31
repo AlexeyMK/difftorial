@@ -11,6 +11,6 @@
     </div>
   </div>
   <hr>
-  <a href="{{previous_commit_url}}" class="button">Previous</a>
-  <a href="{{next_commit_url}}" class="button">Next</a>
+  <a href="{{previous_commit_url}}" class="button {{#unless previous_sha}}disabled{{/unless}}">Previous</a>
+  <a href="{{next_commit_url}}" class="button {{#unless next_sha}}disabled{{/unless}}">Next</a>
 </template>

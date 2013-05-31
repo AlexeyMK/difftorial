@@ -24,6 +24,8 @@ Template.tutorial.helpers
         esc line
     return new Handlebars.SafeString(lines.join '\n')
   commit_message: -> Session.get('message')
+  next_sha: -> Session.get('next')
+  previous_sha: -> Session.get('previous')
   next_commit_url: ->
     return "/#{Session.get 'owner'}/#{Session.get 'repo'}/#{Session.get 'next'}"
   previous_commit_url: ->
