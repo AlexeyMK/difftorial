@@ -8,7 +8,9 @@
     <div class='large-8 columns'>
       {{#each diff}}
       <h3>{{filename}}</h3>
-      <pre>{{renderPatch patch}}</pre>
+      <table>
+        {{renderPatch patch}}
+      </table>
       {{/each}}
     </div>
   </div>

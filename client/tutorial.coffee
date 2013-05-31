@@ -17,12 +17,12 @@ Template.tutorial.helpers
     lines = p.split /\n/
     lines = lines.map (line) ->
       if line[0] == "+"
-        "<span class='plus'>#{esc line}</span>"
+        "<li class='plus'>#{esc line}</li>"
       else if line[0] == "-"
-        "<span class='minus'>#{esc line}</span>"
+        "<li class='minus'>#{esc line}</li>"
       else
-        esc line
-    return new Handlebars.SafeString(lines.join '\n')
+        "<li>#{esc line}</li>"
+    return new Handlebars.SafeString("<ul>#{lines.join ''}</ul>")
   commit_message: -> Session.get('message')
   next_sha: -> Session.get('next')
   previous_sha: -> Session.get('previous')
