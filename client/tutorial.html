@@ -1,4 +1,6 @@
 <template name="tutorial">
-  <h1>Here is the diff</h1>
-  <pre>{{diff}}</pre>
+  {{#each diff}}
+  <h2>{{filename}}</h2>
+  <pre>{{patch}}</pre>
+  {{/each}}
 </template>
