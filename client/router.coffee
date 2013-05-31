@@ -1,10 +1,11 @@
 Meteor.Router.add(
   '/': 'hello'
   '/tutorial/:owner/:repo/:base/:head': (owner, repo, base, head) ->
-    Session.set('owner', owner)
-    Session.set('repo', repo)
-    Session.set('base', base)
-    Session.set('head', head)
+    $.ajax
+      url: "https://api.github.com/repos/#{owner}/#{repo}/compare/#{base}...#{head}",
+      success: (result) ->
+        diff = [file.filename, file.patch] for file in result.files
+        Session.set('diff', diff)
     'tutorial'
   '*': '404'
 )
