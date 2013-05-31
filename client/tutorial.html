@@ -1,9 +1,15 @@
 <template name="tutorial">
-  <h1>{{commit_message}}</h1>
-  {{#each diff}}
-  <h2>{{filename}}</h2>
-  <pre>{{renderPatch patch}}</pre>
-  {{/each}}
+  <h2>{{commit_message}}</h2>
+  <div class='row'>
+    <div class='large-4 columns'>
+    </div>
+    <div class='large-8 columns'>
+      {{#each diff}}
+      <h3>{{filename}}</h3>
+      <pre>{{renderPatch patch}}</pre>
+      {{/each}}
+    </div>
+  </div>
   <hr>
   <a href="{{previous_commit_url}}" class="button">Previous</a>
   <a href="{{next_commit_url}}" class="button">Next</a>
