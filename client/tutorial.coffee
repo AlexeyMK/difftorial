@@ -21,8 +21,7 @@ Template.tutorial.helpers
       else if line[0] == "-"
         "<span class='minus'>#{esc line}</span>"
       else
-        line
-    # safestring fails really horribly when the diff has html in it itself
+        esc line
     return new Handlebars.SafeString(lines.join '\n')
   next_commit_url: ->
     return Session.get('next')
