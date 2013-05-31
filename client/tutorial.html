@@ -1,5 +1,7 @@
 <template name="tutorial">
-  <h2>{{commit_message}}</h2>
+  <h2>{{index}} of {{commits_length}}: {{commit_message}}</h2>
+  <a href="{{previous_commit_url}}" class="button {{#unless previous_sha}}disabled{{/unless}}">Previous</a>
+  <a href="{{next_commit_url}}" class="button {{#unless next_sha}}disabled{{/unless}}">Next</a>
   <div class='row'>
     <div class='large-4 columns'>
     </div>
@@ -10,7 +12,4 @@
       {{/each}}
     </div>
   </div>
-  <hr>
-  <a href="{{previous_commit_url}}" class="button {{#unless previous_sha}}disabled{{/unless}}">Previous</a>
-  <a href="{{next_commit_url}}" class="button {{#unless next_sha}}disabled{{/unless}}">Next</a>
 </template>

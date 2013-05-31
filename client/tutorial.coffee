@@ -30,3 +30,5 @@ Template.tutorial.helpers
     return "/#{Session.get 'owner'}/#{Session.get 'repo'}/#{Session.get 'next'}"
   previous_commit_url: ->
     return "/#{Session.get 'owner'}/#{Session.get 'repo'}/#{Session.get 'previous'}"
+  commits_length: -> Session.get('commits_length')
+  index: -> Session.get('index')

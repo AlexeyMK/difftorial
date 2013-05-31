@@ -20,15 +20,19 @@ Meteor.Router.add(
     $.ajax(
       url: "https://api.github.com/repos/#{owner}/#{repo}/commits?per_page=100"
     ).done (commits) ->
+      console.log commits.length
+      Session.set('commits_length', commits.length)
       if sha?
         for commit, index in commits
           if commit.sha == sha
+            Session.set('index', commits.length - index)
             Session.set('next', commits[index-1]?.sha or '')
             Session.set('previous', commits[index+1]?.sha or '')
             Session.set('message', commit.commit.message)
       else
         commit = commits[commits.length - 1]
         sha = commit.sha
+        Session.set('index', 1)
         Session.set('next', commits[commits.length - 2].sha)
         Session.set('previous', '')
         Session.set('message', commit.commit.message)
