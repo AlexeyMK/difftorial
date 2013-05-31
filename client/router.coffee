@@ -1,6 +1,5 @@
 Meteor.Router.add(
-  '/': 'hello'
-  '/:owner/:repo/:sha': (owner, repo, sha) ->
+  '/tutorial/:owner/:repo/:sha': (owner, repo, sha) ->
     base = ""
     console.log sha
     $.ajax
