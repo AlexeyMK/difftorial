@@ -23,6 +23,7 @@ Template.tutorial.helpers
       else
         esc line
     return new Handlebars.SafeString(lines.join '\n')
+  commit_message: -> Session.get('message')
   next_commit_url: ->
     return Session.get('next')
   previous_commit_url: ->

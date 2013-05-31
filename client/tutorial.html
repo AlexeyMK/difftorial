@@ -1,4 +1,5 @@
 <template name="tutorial">
+  <h1>{{commit_message}}</h1>
   {{#each diff}}
   <h2>{{filename}}</h2>
   <pre>{{renderPatch patch}}</pre>
