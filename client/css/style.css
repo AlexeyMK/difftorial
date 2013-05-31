@@ -4,3 +4,8 @@
 .minus {
   background-color: #fdd;
 }
+pre {
+  background-color: #eee;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
