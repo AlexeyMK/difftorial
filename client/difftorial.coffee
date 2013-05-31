@@ -8,4 +8,4 @@ Meteor.startup ->
     url: "https://api.github.com/repos/#{owner}/#{repo}/compare/#{base}...#{head}",
     success: (result) ->
       console.log result
-      debugger;
+      debugger
