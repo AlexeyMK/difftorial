@@ -14,15 +14,26 @@ Template.tutorial.helpers
       escapeChar = (chr) -> escape[chr] or "&amp;"
       return string.replace(badChars, escapeChar).toString()
 
+    # break up by comments, not by lines
     lines = p.split /\n/
     lines = lines.map (line) ->
-      if line[0] == "+"
-        "<li class='plus'>#{esc line}</li>"
-      else if line[0] == "-"
-        "<li class='minus'>#{esc line}</li>"
-      else
-        "<li>#{esc line}</li>"
-    return new Handlebars.SafeString("<ul>#{lines.join ''}</ul>")
+      class_to_add = switch line[0]
+        when "+" then "plus"
+        when "-" then "minus"
+        else ""
+      """
+        <li>
+          <div class='annotation'>
+          </div>
+          <div class='content #{class_to_add}'>
+            <div class='highlight'>
+              <pre>#{esc line}</pre>
+            </div>
+          </div>
+        </li>
+      """
+    return lines.join('')
+
   commit_message: -> Session.get('message')
   next_sha: -> Session.get('next')
   previous_sha: -> Session.get('previous')

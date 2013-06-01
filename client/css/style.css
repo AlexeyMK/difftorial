@@ -1,17 +1,13 @@
-.plus {
-  background: #dfd;
+div.plus {
+  background-color: #dfd !important;
 }
-.minus {
-  background: #fdd;
+div.minus {
+  background-color: #fdd !important;
 }
-li {
-  /*display: table-row;*/
-  min-width: 100%;
-  white-space: nowrap;
+ul.sections > li > div.content {
+  margin: 0 25px 0 35px;
+  padding: 0;
 }
-ul {
-  overflow-x: scroll;
-  list-style: none;
-  font-size: 0.8em;
-  font-family: Monaco,Courier,monospace;
+ul.sections > li > div.annotation {
+  padding: 0 25px 0 50px;
 }

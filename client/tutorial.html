@@ -1,17 +1,19 @@
 <template name="tutorial">
-  <h2>{{index}} of {{commits_length}}: {{commit_message}}</h2>
-  <a href="{{previous_commit_url}}" class="button {{#unless previous_sha}}disabled{{/unless}}">Previous</a>
-  <a href="{{next_commit_url}}" class="button {{#unless next_sha}}disabled{{/unless}}">Next</a>
-  <div class='row'>
-    <div class='large-4 columns'>
-    </div>
-    <div class='large-8 columns'>
-      {{#each diff}}
-      <h3>{{filename}}</h3>
-      <table>
-        {{renderPatch patch}}
-      </table>
-      {{/each}}
-    </div>
-  </div>
+  <ul class='sections'>
+    <li>
+      <div class='annotation'>
+        <h2>{{index}} of {{commits_length}}: {{commit_message}}</h2>
+        <a href="{{previous_commit_url}}" class="button {{#unless previous_sha}}disabled{{/unless}}">Previous</a>
+        <a href="{{next_commit_url}}" class="button {{#unless next_sha}}disabled{{/unless}}">Next</a>
+      </div>
+    </li>
+    {{#each diff}}
+    <li>
+      <div class='annotation'>
+        {{filename}}
+      </div>
+    </li>
+    {{{renderPatch patch}}}
+    {{/each}}
+  </ul>
 </template>
