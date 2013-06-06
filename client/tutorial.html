@@ -13,7 +13,16 @@
         {{filename}}
       </div>
     </li>
-    {{{renderPatch patch}}}
+    {{#each getSections filename patch}}
+    <li>
+      <div class='annotation'>
+        {{docsHtml}}
+      </div>
+      <div class='content'>
+        {{{codeHtml}}}
+      </div>
+    </li>
+    {{/each}}  
     {{/each}}
   </ul>
 </template>

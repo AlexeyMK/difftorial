@@ -20,7 +20,6 @@ Meteor.Router.add(
     $.ajax(
       url: "https://api.github.com/repos/#{owner}/#{repo}/commits?per_page=100"
     ).done (commits) ->
-      console.log commits.length
       Session.set('commits_length', commits.length)
       if sha?
         for commit, index in commits
