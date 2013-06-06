@@ -19,7 +19,6 @@ Meteor.Router.add(
     Session.set("repo", repo)
     Session.set('commit_count', 'many')
     # TODO put back code that tells us 'x of y commits'
-    # TODO put back 'previous' link
 
     # find the first commit if necessary
     sha_promise = $.Deferred()
@@ -33,13 +32,18 @@ Meteor.Router.add(
     sha_promise.done (sha) ->
       NextCommiter.next_commit(owner, repo, sha).done(next_sha_promise.resolve)
 
-    $.when(sha_promise, next_sha_promise).done (sha, next_sha) ->
+    next_sha_promise.done (next_sha) ->
       Session.set('next', next_sha)
 
+    sha_promise.done (sha) ->
       $.ajax(
         url: "https://api.github.com/repos/#{owner}/#{repo}/commits/#{sha}",
       ).done (result) ->
         Session.set('message', result.commit.message)
+
+        if result.parents.length > 0
+          Session.set('previous', result.parents[0].sha)
+
         diff = ({filename: file.filename, patch: file.patch} \
           for file in result.files)
         Session.set('diff', diff)
@@ -93,9 +97,10 @@ NextCommiter =
           console.log "going deeper"
           # TODO case for 'we totally didn't find it.'
           # could not find, must go deeper - follow github's `next` link
-          next_url = commit_query.getResponseHeader('link').split(" ")[0]
-          next_url = next_url[1..next_url.length - 3]
-          pore_through_github_commits owner, repo, next_url
+          next_url = commit_query.getResponseHeader('link')?.split(" ")[0]
+          if next_url
+            next_url = next_url[1..next_url.length - 3]
+            pore_through_github_commits owner, repo, next_url
 
     pore_through_github_commits(owner, repo)
 
