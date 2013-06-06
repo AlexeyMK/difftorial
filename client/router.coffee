@@ -18,6 +18,8 @@ Meteor.Router.add(
     Session.set("owner", owner)
     Session.set("repo", repo)
     Session.set('commit_count', 'many')
+    # TODO put back code that tells us 'x of y commits'
+    # TODO put back 'previous' link
 
     # find the first commit if necessary
     sha_promise = $.Deferred()
@@ -27,29 +29,20 @@ Meteor.Router.add(
       NextCommiter.first_commit(owner, repo).done (first_commit) ->
         sha_promise.resolve(first_commit.sha)
 
+    next_sha_promise = $.Deferred()
     sha_promise.done (sha) ->
-      console.log "commit in question is #{sha}"
-    ###
-    for commit, index in commits
-      if commit.sha == sha
-        Session.set('index', commits.length - index)
-        Session.set('next', commits[index-1]?.sha or '')
-        Session.set('previous', commits[index+1]?.sha or '')
-        Session.set('message', commit.commit.message)
-        else
-          commit = commits[commits.length - 1]
-          sha = commit.sha
-          Session.set('index', 1)
-          Session.set('next', commits[commits.length - 2].sha)
-          Session.set('previous', '')
-          Session.set('message', commit.commit.message)
+      NextCommiter.next_commit(owner, repo, sha).done(next_sha_promise.resolve)
 
-        $.ajax(
-          url: "https://api.github.com/repos/#{owner}/#{repo}/commits/#{sha}",
-        ).done (result) ->
-          diff = ({filename: file.filename, patch: file.patch} for file in result.files)
-          Session.set('diff', diff)
-          ###
+    $.when(sha_promise, next_sha_promise).done (sha, next_sha) ->
+      Session.set('next', next_sha)
+
+      $.ajax(
+        url: "https://api.github.com/repos/#{owner}/#{repo}/commits/#{sha}",
+      ).done (result) ->
+        Session.set('message', result.commit.message)
+        diff = ({filename: file.filename, patch: file.patch} \
+          for file in result.files)
+        Session.set('diff', diff)
     return 'tutorial'
   '*': '404'
 )
@@ -60,6 +53,7 @@ NextCommiter =
     $.ajax(
       url: "https://api.github.com/repos/#{owner}/#{repo}"
     ).done (repo_data) ->
+      console.log repo_data
       # grab first commit
       # filtering by date to hope to get initial commits only
       $.ajax(
@@ -69,12 +63,43 @@ NextCommiter =
           sha: 'master'
           until: repo_data.created_at
       ).done (earliest_commits) ->
+        # AMK TODO NEXT:
+        # try /yefim/dbide:
+        #   we run into the  'earliest_commits is empty' problem
         first_commit_promise.resolve(earliest_commits.pop())
 
     return first_commit_promise
 
-  next_commit: () ->
-    return "bob"
+  next_commit: (owner, repo, current_sha) ->
+    # TODO this is where all the really clever caching stuff eventually comes
+    # for now: paginate through commits until you find a child of this commit
+    next_commit_promise = $.Deferred()
+
+    pore_through_github_commits = (owner, repo, url) ->
+      ajax_args = if url? then {url} else {
+        url: "https://api.github.com/repos/#{owner}/#{repo}/commits"
+        data:
+          per_page: 100
+          sha: 'master'
+      }
+
+      commit_query = $.ajax(ajax_args).done (commits) ->
+        for commit in commits
+          for parent in commit.parents
+            if parent.sha is current_sha
+              next_commit_promise.resolve(commit.sha)
+
+        unless next_commit_promise.state() is 'resolved'
+          console.log "going deeper"
+          # TODO case for 'we totally didn't find it.'
+          # could not find, must go deeper - follow github's `next` link
+          next_url = commit_query.getResponseHeader('link').split(" ")[0]
+          next_url = next_url[1..next_url.length - 3]
+          pore_through_github_commits owner, repo, next_url
+
+    pore_through_github_commits(owner, repo)
+
+    return next_commit_promise
 
 ###
 spec for paginated commit giver:
