@@ -18,7 +18,8 @@ Meteor.Router.add(
     Session.set("owner", owner)
     Session.set("repo", repo)
     Session.set('commit_count', 'many')
-    # TODO put back code that tells us 'x of y commits'
+    # AMK TODO next:
+    # figure out which commit we are on, probably by recursing
 
     # find the first commit if necessary
     sha_promise = $.Deferred()
